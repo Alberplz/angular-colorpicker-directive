@@ -4,6 +4,9 @@ AnguarJS colorpicker directive with no dependencies required.
 # Demo page
 http://alberplz.github.io/angular-colorpicker-directive/index.html
 
+# Installation
+bower install angular-colorpicker-directive
+
 # Usage
 * Include color-picker.min.js and color-picker.min.css:
 ```html
