@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Angular Color Picker Directive</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">               
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="css/color-picker.min.css" />        
+    </head>
+    <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.min.js"></script>
+        <script src="js/color-picker.min.js"></script>
+        <script>var app = angular.module('app', ['colorpicker']);</script>  
+        <script>
+            app.controller('AppCtrl', ['$scope', function ($scope) {
+                $scope.var3 = '#ff2e00';
+                $scope.var4 = '#e6ff00';
+                $scope.var5 = '#db00ff';
+            }]);
+        </script>
+        <div class="container" ng-app="app" ng-controller="AppCtrl">
+            <h1>Angular Color Picker Directive</h1>
+            <h4>AngularJS color picker directive with no dependencies.</h4>
+            <h4><b>by Alberto Pujante</b></h4>
+            <a class="btn btn-primary btn-lg" href="https://github.com/Alberplz/angular-colorpicker-directive">View on Github</a>
+            
+            <div class="row">   
+                <hr>
+                <div class="col-md-5">
+                    <input color-picker                            
+                           color-picker-model="var"/>                    
+                </div>
+                <div class="col-md-7">  
+                    <p>Basic usage:</p>
+                    <pre>
+&lt;input color-picker 
+color-picker-model="var"/&gt;
+                     </pre>
+                </div>
+            </div>
+            
+            <hr>
+            <div class="row">
+                <div class="col-md-5">
+                    <input color-picker
+                   color-picker-model="var2"
+                   ng-style="{background: var2}"/>
+                </div>
+                <div class="col-md-7">
+                    <p>Changing background color:</p>
+                    <pre>
+&lt;input color-picker
+color-picker-model="var"
+ng-style="{background:var}"/&gt;
+                     </pre>
+                </div>
+                
+            </div>
+            
+            <hr>
+            <div class="row">
+                <div class="col-md-5">
+                    <input color-picker 
+                   color-picker-show-value="false"
+                   color-picker-model="var3"
+                   ng-style="{background: var3}"/>
+                </div>
+                <div class="col-md-7">
+                    <p>Hiding output text color. When user introduces a value the output color is showed, use a no editable html element if you want to avoid this behaviour:</p>
+                    <pre>
+&lt;input color-picker
+color-picker-model="var"
+color-picker-show-value="false"
+ng-style="{background:var}"/&gt;
+                     </pre>
+                </div>
+                
+            </div>
+            
+            <hr>
+            <div class="row">
+                <div class="col-md-5">                    
+                    <input color-picker
+                   color-picker-model="var4"
+                   color-picker-position="bottom"
+                   ng-style="{background: var4}"/>
+                </div>
+                <div class="col-md-7">
+                    <p>You can change the color picker position, </p>
+                    <pre>
+&lt;input color-picker
+color-picker-model="var"
+color-picker-position="bottom"
+ng-style="{background:var}"/&gt;
+                     </pre>
+                </div>                
+            </div>
+            
+            <hr>
+            <div class="row">
+                <div class="col-md-5">                    
+                    <input color-picker
+                   color-picker-model="var5"
+                   color-picker-fixed-position="true"
+                   ng-style="{background: var5}"/>
+                </div>
+                <div class="col-md-7">
+                    <p>or put it in a fixed position:</p>
+                    <pre>
+&lt;input color-picker
+color-picker-model="var"
+color-picker-fixed-position="true"
+ng-style="{background:var}"/&gt;
+                     </pre>
+                </div>                
+            </div>
+            
+            <hr>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Options</th>
+                                <th>Values (default values in bold)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>color-picker-model</td>
+                                <td>
+                                    Variable with de color value
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>color-picker-show-value</td>
+                                <td>
+                                    <b>true</b>, false
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>color-picker-position</td>
+                                <td>
+                                    <b>right</b>, left, top, bottom
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>color-picker-fixed-position</td>
+                                <td>
+                                    true, <b>false</b>
+                                </td>
+                            </tr>                    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <hr>
+            <footer class="footer">&copy; Alberto Pujante 2016 | <a href="https://github.com/Alberplz/angular-colorpicker-directive">Angular Multi-Input Colorpicker</a></footer>
+        </div>        
+    </body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Color picker</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    </head>
+    <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.min.js"></script>
+        <script src="slider-images.js"></script>
+
+        <script>angular.module('app', ['colorPickerControlsApp']);</script>        
+
+        <div class="container" ng-app="app">
+            <h1>Angular Color Picker Directive</h1>
+            <h4>This tool creates precalculated images for color pickers.</h4>
+            <h4><b>by Alberto Pujante</b></h4>
+            <a class="btn btn-primary btn-lg" href="https://github.com/Alberplz/angular-colorpicker-directive">View on Github</a>
+            <hr>           
+            <div class="row">
+                <div class="col-md-5">
+                    <p>Saturation and value slider:</p>
+                    <div saturation
+                         saturation-width="230" 
+                         saturation-height="130">
+                        <canvas></canvas><br>
+                        <textarea></textarea>
+                    </div>     
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <hr>
+                    <p>Hue slider:</p>
+                    <div hue
+                         hue-width="150" 
+                         hue-height="16">
+                        <canvas></canvas><br>
+                        <textarea></textarea>
+                    </div>   
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <hr>
+                    <p>Alpha slider:</p>
+                    <div alpha
+                         alpha-width="150"
+                         alpha-height="16" 
+                         alpha-square-width="8">
+                        <canvas></canvas><br>
+                        <textarea></textarea> 
+                    </div>  
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <hr>
+                    <p>Background for selected color:</p>
+                    <div color
+                         color-width="40" 
+                         color-height="40" 
+                         color-square-width="8">
+                        <canvas></canvas><br>
+                        <textarea></textarea>                             
+                    </div>      
+                </div>                
+            </div>
+            <hr>
+            <footer class="footer">&copy; Alberto Pujante 2016 | <a href="https://github.com/Alberplz/angular-colorpicker-directive">Angular Multi-Input Colorpicker</a></footer>
+        </div>
+
+    </body>
+</html>
