@@ -8,5 +8,8 @@
             "js/color-picker.js",
             "css/color-picker.css"
 	],
+  "ignore": [
+    "node_modules"
+  ],
   "licence": "MIT"
 }
