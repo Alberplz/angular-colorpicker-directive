@@ -45,7 +45,7 @@ If you want to change precaculated images for color picker sliders you can find 
      <textarea></textarea>
 </div>
 ```
-The images are not compressed.
+A bug in Firefox 44.0.2 for Linux shows url base64 images with small vertical lines.
 
 * Demo:
 http://alberplz.github.io/angular-colorpicker-directive/slider-creator/slider-images.html
