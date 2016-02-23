@@ -4,9 +4,6 @@ AnguarJS colorpicker directive with no dependencies required.
 # Demo page
 http://alberplz.github.io/angular-colorpicker-directive/index.html
 
-# Installation
-bower install angular-colorpicker-directive
-
 # Usage
 * Include color-picker.min.js and color-picker.min.css:
 ```html
@@ -45,7 +42,7 @@ If you want to change precaculated images for color picker sliders you can find 
      <textarea></textarea>
 </div>
 ```
-A bug in Firefox 44.0.2 for Linux shows url base64 images with small vertical lines.
+The images are not compressed.
 
 * Demo:
 http://alberplz.github.io/angular-colorpicker-directive/slider-creator/slider-images.html

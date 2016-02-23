@@ -16,6 +16,8 @@
                 $scope.var3 = '#ff2e00';
                 $scope.var4 = '#e6ff00';
                 $scope.var5 = '#db00ff';
+                $scope.var6 = '#03ff8b';
+                $scope.var7 = '#008fff';
             }]);
         </script>
         <div class="container" ng-app="app" ng-controller="AppCtrl">
@@ -116,6 +118,50 @@ ng-style="{background:var}"/&gt;
             </div>
             
             <hr>
+            <div class="row">
+                <div class="col-md-5">                    
+                    <input color-picker
+                   color-picker-model="var6"
+                   color-picker-show-input-spinner="true"
+                   color-picker-spinner-rgba-steps="5;5;5;0.1"
+                   color-picker-spinner-hsla-steps="5;5;5;0.1"
+                   ng-style="{background: var6}"/>
+                </div>
+                <div class="col-md-7">
+                    <p>You can show input spinner and change the step:</p>
+                    <pre>
+&lt;input color-picker
+color-picker-model="var"
+color-picker-show-input-spinner="true"
+color-picker-spinner-rgba-steps="5;5;5;0.1"
+color-picker-spinner-hsla-steps="5;5;5;0.1"
+ng-style="{background:var}"/&gt;
+                     </pre>
+                </div>                
+            </div>
+            
+            <hr>
+            <div class="row">   
+                <div class="col-md-5">
+                    <input color-picker                            
+                           color-picker-model="var7"
+                           color-picker-show-cancel-button="true"
+                           color-picker-cancel-button-class="btn btn-default btn-xs"
+                           ng-style="{background: var7}"/>                    
+                </div>
+                <div class="col-md-7">  
+                    <p>Cancel button:</p>
+                    <pre>
+&lt;input color-picker 
+color-picker-model="var"
+color-picker-show-cancel-button="true"
+color-picker-cancel-button-class="btn btn-default btn-xs"
+ng-style="{background:var}"/&gt;
+                     </pre>
+                </div>
+            </div>
+            
+            <hr>
             <br>
             <div class="row">
                 <div class="col-md-12">
@@ -150,7 +196,38 @@ ng-style="{background:var}"/&gt;
                                 <td>
                                     true, <b>false</b>
                                 </td>
-                            </tr>                    
+                            </tr>
+                            <tr>
+                                <td>color-picker-show-input-spinner</td>
+                                <td>
+                                    true, <b>false</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>color-picker-spinner-rgba-steps</td>
+                                <td>
+                                    A semicolon separated list with the steps, <b>default: 1;1;1;0.1</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>color-picker-spinner-hsla-steps</td>
+                                <td>
+                                    A semicolon separated list with the steps, <b>default: 1;1;1;0.1</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>color-picker-show-cancel-button</td>
+                                <td>
+                                    true, <b>false</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>color-picker-cancel-button-class</td>
+                                <td>
+                                    Your custom class for cancel button
+                                </td>
+                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>

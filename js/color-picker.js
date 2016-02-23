@@ -164,6 +164,11 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                     $scope.hueSlider = {left: 0};
                     $scope.sAndLSlider = {left: 0, top: 0};
                     $scope.alphaSlider = {left: 0};
+                    $scope.rbgaSteps = {r: 1, g: 1, b: 1, a: 0.1};
+                    $scope.hslaSteps = {h: 1, s: 1, l: 1, a: 0.1};
+                    $scope.cancelButtonClass = '';
+                    $scope.showCancelButton = false;
+                    $scope.extraLargeClass = '';
 
                     $scope.setSaturation = function (v, rg) {
                         var hsla = ColorHelper.hsva2hsla($scope.hsva);
@@ -237,6 +242,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                         $scope.sAndLSlider = {left: $scope.hsva.s * $scope.sAndLMax.x - 8 + 'px', top: (1 - $scope.hsva.v) * $scope.sAndLMax.y - 8 + 'px'};
                         $scope.hueSlider.left = ($scope.hsva.h) * $scope.hueMax.x - 8 + 'px';
                         $scope.alphaSlider.left = $scope.hsva.a * $scope.alphaMax.x - 8 + 'px';
+                        $scope.alphaInvalidClass = '';
                     };
 
                     $scope.setColorFromHex = function (string) {
@@ -261,8 +267,8 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
 
                 }],
             link: function (scope, element, attr) {
-                var template, close = false;
-                ;
+                var template, close = false, initialValue = '';
+                initialValue = scope.colorPickerModel;
 
                 if (scope.colorPickerModel === undefined) {
                     scope.colorPickerModel = '#008fff';
@@ -274,13 +280,36 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                 if (attr.colorPickerPosition === undefined) {
                     attr.colorPickerPosition = 'right';
                 }
+                if (attr.colorPickerShowInputSpinner === undefined) {
+                    attr.colorPickerShowInputSpinner = 'false';
+                }
+                if (attr.colorPickerShowCancelButton === undefined) {
+                    attr.colorPickerShowCancelButton = 'false';
+                }
+                if (attr.colorPickerShowCancelButton === 'true') {
+                    scope.showCancelButton = true;
+                }
+                if(attr.colorPickerCancelButtonClass !== undefined){
+                    scope.cancelButtonClass = attr.colorPickerCancelButtonClass;
+                    scope.extraLargeClass = 'color-picker-extra-large';
+                }
+
+                if (attr.colorPickerSpinnerRgbaSteps !== undefined && attr.colorPickerSpinnerRgbaSteps.match(/^\d+;\d+;\d+;[0-9]+([\.][0-9]{1,2})?$/) !== null) {
+                    var steps = attr.colorPickerSpinnerRgbaSteps.split(';');
+                    scope.rbgaSteps = {r: steps[0], g: steps[1], b: steps[2], a: steps[3]};
+
+                }
+                if (attr.colorPickerSpinnerHslaSteps !== undefined && attr.colorPickerSpinnerHslaSteps.match(/^\d+;\d+;\d+;[0-9]+([\.][0-9]{1,2})?$/) !== null) {
+                    var steps = attr.colorPickerSpinnerHslaSteps.split(';');
+                    scope.hslaSteps = {h: steps[0], s: steps[1], l: steps[2], a: steps[3]};
+                }
 
                 updateFromString(scope.colorPickerModel);
                 if (attr.colorPickerShowValue === 'true') {
                     element.val(scope.outputColor);
                 }
 
-                template = angular.element('<div ng-show="show" class="color-picker">' +
+                template = angular.element('<div ng-show="show" class="color-picker {{extraLargeClass}}">' +
                         '   <div class="arrow arrow-' + attr.colorPickerPosition + '"></div>' +
                         '   <div slider rg-x=1 rg-y=1 action="setSaturationAndBrightness(s, v, rgX, rgY)" class="saturation-lightness" ng-style="{\'background-color\':hueSliderColor}">' +
                         '       <div class="cursor-sv" ng-style="{\'top\':sAndLSlider.top, \'left\':sAndLSlider.left}"></div>' +
@@ -294,17 +323,17 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                         '   <div class="selected-color-background"></div>' +
                         '   <div class="selected-color" ng-style="{\'background-color\':outputColor}"></div>' +
                         '   <div ng-show="type==2" class="hsla-text">' +
-                        '       <input text type="number" rg=360 action="setHue(v, rg)" ng-model="hslaText.h"/>' +
-                        '       <input text type="number" rg=100 action="setSaturation(v, rg)" ng-model="hslaText.s"/>' +
-                        '       <input text type="number" rg=100 action="setLightness(v, rg)" ng-model="hslaText.l"/>' +
-                        '       <input text type="number" rg=1 action="setAlpha(v, rg)" ng-model="hslaText.a"/>' +
+                        '       <input text type="number" pattern="[0-9]*" min="0" max="360" step="' + scope.hslaSteps.h + '" rg=360 action="setHue(v, rg)" ng-model="hslaText.h" spinner="' + attr.colorPickerShowInputSpinner + '" />' +
+                        '       <input text type="number" pattern="[0-9]*" min="0" max="100" step="' + scope.hslaSteps.s + '" rg=100 action="setSaturation(v, rg)" ng-model="hslaText.s" spinner="' + attr.colorPickerShowInputSpinner + '" />' +
+                        '       <input text type="number" pattern="[0-9]*" min="0" max="100" step="' + scope.hslaSteps.l + '" rg=100 action="setLightness(v, rg)" ng-model="hslaText.l" spinner="' + attr.colorPickerShowInputSpinner + '" />' +
+                        '       <input text type="number" pattern="[0-9]+([\.,][0-9]{1,2})?" min="0" max="1" step="' + scope.hslaSteps.a + '" rg=1 action="setAlpha(v, rg)" ng-model="hslaText.a" spinner="' + attr.colorPickerShowInputSpinner + '" />' +
                         '       <div>H</div><div>S</div><div>L</div><div>A</div>' +
                         '   </div>' +
                         '   <div ng-show="type==1" class="rgba-text">' +
-                        '       <input text type="number" rg=255 action="setR(v, rg)" ng-model="rgbaText.r"/>' +
-                        '       <input text type="number" rg=255 action="setG(v, rg)" ng-model="rgbaText.g"/>' +
-                        '       <input text type="number" rg=255 action="setB(v, rg)" ng-model="rgbaText.b"/>' +
-                        '       <input text type="number" rg=1 action="setAlpha(v, rg)" ng-model="rgbaText.a"/>' +
+                        '       <input text type="number" pattern="[0-9]*" min="0" max="255" step="' + scope.rbgaSteps.r + '" rg=255 action="setR(v, rg)" ng-model="rgbaText.r" spinner="' + attr.colorPickerShowInputSpinner + '" />' +
+                        '       <input text type="number" pattern="[0-9]*" min="0" max="255" step="' + scope.rbgaSteps.g + '" rg=255 action="setG(v, rg)" ng-model="rgbaText.g" spinner="' + attr.colorPickerShowInputSpinner + '" />' +
+                        '       <input text type="number" pattern="[0-9]*" min="0" max="255" step="' + scope.rbgaSteps.b + '" rg=255 action="setB(v, rg)" ng-model="rgbaText.b" spinner="' + attr.colorPickerShowInputSpinner + '" />' +
+                        '       <input text type="number" pattern="[0-9]+([\.,][0-9]{1,2})?" min="0" max="1" step="' + scope.rbgaSteps.a + '" rg=1 action="setAlpha(v, rg)" ng-model="rgbaText.a" spinner="' + attr.colorPickerShowInputSpinner + '" />' +
                         '       <div>R</div><div>G</div><div>B</div><div>A</div>' +
                         '   </div>' +
                         '   <div class="hex-text" ng-show="type==0">' +
@@ -312,6 +341,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                         '       <div>Hex</div>' +
                         '   </div>' +
                         '   <div ng-click="typePolicy()" class="type-policy"></div>' +
+                        '   <button type="button" class="{{cancelButtonClass}}" ng-show="showCancelButton" ng-click="cancelColor()">Cancel</button>' +
                         '</div>');
 
                 document.getElementsByTagName("body")[0].appendChild(template[0]);
@@ -325,11 +355,19 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                     }
                 }
 
+                element.on('paste', delayedUpdate);
+                function delayedUpdate() {
+                    setTimeout(function () {
+                        keyup();
+                    }, 5);
+                }
+
                 element.on('keyup', keyup);
                 function keyup() {
                     scope.$apply(function () {
                         attr.colorPickerShowValue = 'true';
                         updateFromString(element.val());
+                        scope.colorPickerModel = element.val();
                     });
                 }
 
@@ -342,6 +380,14 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                         }
                     });
                 });
+
+                scope.cancelColor = function () {
+                    scope.colorPickerModel = initialValue;
+                    element.val(initialValue);
+                    scope.show = false;
+                    $document.off('mouseup', mouseup);
+                    $document.off('mousedown', mousedown);
+                };
 
                 element.on('click', open);
                 function open(event) {
@@ -379,32 +425,35 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                     });
 
                     $document.on('mousedown', mousedown);
-                    function mousedown(event) {
-                        if (event.target.tagName !== "INPUT" && event.target.tagName !== 'HTML') {
-                            event.preventDefault();
-                        }
-                        if (template[0] === event.target || isDescendant(template[0], event.target) || event.target.tagName === 'HTML') {
-                            close = false;
-                        } else {
-                            close = true;
-                        }
-                    }
-
                     $document.on('mouseup', mouseup);
-                    function mouseup(event) {
-                        if (close && event.target !== element[0] && template[0] !== event.target && !isDescendant(template[0], event.target)) {
-                            scope.$apply(function () {
-                                scope.show = false;
-                            });
-                            $document.off('mouseup', mouseup);
-                            $document.off('mousedown', mousedown);
-                        }
-                    }
                 }
+
                 element.on('$destroy', function () {
                     element.off('click', open);
                     element.off('keyup', keyup);
+                    element.off('paste', delayedUpdate);
                 });
+
+                function mousedown(event) {
+                    if (event.target.tagName !== "INPUT" && event.target.tagName !== 'HTML') {
+                        event.preventDefault();
+                    }
+                    if (template[0] === event.target || isDescendant(template[0], event.target) || event.target.tagName === 'HTML') {
+                        close = false;
+                    } else {
+                        close = true;
+                    }
+                }
+
+                function mouseup(event) {
+                    if (close && event.target !== element[0] && template[0] !== event.target && !isDescendant(template[0], event.target)) {
+                        scope.$apply(function () {
+                            scope.show = false;
+                        });
+                        $document.off('mouseup', mouseup);
+                        $document.off('mousedown', mousedown);
+                    }
+                }
 
                 function isDescendant(parent, child) {
                     var node = child.parentNode;
@@ -433,15 +482,27 @@ colorPicker.directive('text', [function () {
             scope: {
                 action: '&'
             },
-            link: function (scope, element, attr) {
-                element.on('paste', paste);
-                element.on('keyup', keyup);
+            link: function (scope, element, attr, ngModel) {
+                element.on('paste', delayedUpdate);
+                element.on('keyup', update);
+                element.on('change', update);
+                element.on('focus', showSpinner);
+                element.on('blur', hideSpinner);
+                element.on('mouseover', showSpinner);
+                element.on('mouseout', hideSpinner);
+                element.addClass('color-picker-input-spinner');
 
-                function keyup(event) {
-                    update(event);
+                function showSpinner(event) {
+                    if (attr.spinner === "true") {
+                        element.removeClass('color-picker-input-spinner');
+                    }
                 }
 
-                function paste(event) {
+                function hideSpinner(event) {
+                    element.addClass('color-picker-input-spinner');
+                }
+
+                function delayedUpdate(event) {
                     setTimeout(function () {
                         update(event);
                     }, 5);
@@ -454,18 +515,27 @@ colorPicker.directive('text', [function () {
                         }
                     } else {
                         var value = parseFloat(element.val());
-                        if (!isNaN(value) && element.val().slice(-1) !== '.') {
+                        if (!isNaN(value)) {
                             value = Math.abs(Math.min(parseFloat(element.val()), attr.rg));
                             scope.action({v: value, rg: attr.rg});
                             scope.$emit('color-changed');
+                            scope.$emit('alpha-valid');
+                        } else {
+                            scope.$emit('alpha-invalid');
                         }
                     }
                 }
                 element.on('$destroy', function () {
-                    element.off('paste', keyup);
-                    element.off('keyup', keyup);
+                    element.off('paste', delayedUpdate);
+                    element.off('keyup', update);
+                    element.off('change', update);
+                    element.off('focus', showSpinner);
+                    element.off('blur', hideSpinner);
+                    element.off('mouseover', showSpinner);
+                    element.off('mouseout', hideSpinner);
                 });
-            }};
+            }
+        }
     }]);
 colorPicker.directive('slider', ['$document', '$window', function ($document, $window) {
         return {
@@ -493,9 +563,9 @@ colorPicker.directive('slider', ['$document', '$window', function ($document, $w
                     var y = Math.max(0, Math.min(getY(event, element[0]), maxTop));
                     if (attr.rgX !== undefined && attr.rgY !== undefined) {
                         scope.action({s: x / maxLeft, v: (1 - y / maxTop), rgX: attr.rgX, rgY: attr.rgY});
-                    } else if (attr.rgX === undefined && attr.rgY !== undefined) {
-                        scope.action({v: y / maxTop, rg: attr.rgY});
-                    } else {
+                    } /*else if (attr.rgX === undefined && attr.rgY !== undefined) {
+                     scope.action({v: y / maxTop, rg: attr.rgY});
+                     }*/ else {
                         scope.action({v: x / maxLeft, rg: attr.rgX});
                     }
                     scope.$emit('color-changed');
