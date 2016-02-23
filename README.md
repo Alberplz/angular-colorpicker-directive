@@ -25,8 +25,13 @@ Default option is the first item.
 <input color-picker 
        color-picker-model="var"
        color-picker-show-value="true, false"
-       color-picker-position = "right, left, top, bottom"
-       color-picker-fixed-position = "false, true"
+       color-picker-position="right, left, top, bottom"
+       color-picker-fixed-position="false, true"
+       color-picker-show-input-spinner="true"
+       color-picker-spinner-rgba-steps="1;1;1;0.1"
+       color-picker-spinner-hsla-steps="1;1;1;0.1"
+       color-picker-show-cancel-button="false, true"
+       color-picker-cancel-button-class="btn btn-default btn-xs"
   />
 ```
 

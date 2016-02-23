@@ -267,8 +267,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
 
                 }],
             link: function (scope, element, attr) {
-                var template, close = false, initialValue = '';
-                initialValue = scope.colorPickerModel;
+                var template, close = false, initialValue = '';                
 
                 if (scope.colorPickerModel === undefined) {
                     scope.colorPickerModel = '#008fff';
@@ -392,6 +391,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                 element.on('click', open);
                 function open(event) {
                     var box;
+                    initialValue = scope.colorPickerModel;
                     scope.$apply(function () {
                         scope.show = true;
                     });
