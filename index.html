@@ -5,7 +5,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">               
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
-        <link rel="stylesheet" type="text/css" href="css/color-picker.min.css" />        
+        <link rel="stylesheet" type="text/css" href="css/color-picker.min.css" />  
+        <style>
+            input[color-picker]{
+                margin-bottom: 10px;
+                width: 182px;
+            }
+        </style>
     </head>
     <body>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.min.js"></script>
@@ -18,6 +24,8 @@
                 $scope.var5 = '#db00ff';
                 $scope.var6 = '#03ff8b';
                 $scope.var7 = '#008fff';
+                $scope.var8 = '#ff2e00';
+                $scope.var9 = '#e6ff00';
             }]);
         </script>
         <div class="container" ng-app="app" ng-controller="AppCtrl">
@@ -59,13 +67,36 @@ ng-style="{background:var}"/&gt;
                 
             </div>
             
+            <div class="row">   
+                <hr>
+                <div class="col-md-5">
+                    <input color-picker                            
+                           color-picker-model="var3"
+                           color-picker-output-format="'rgba'"                           
+                           ng-style="{background: var3}"/><br><br>
+                     <input color-picker                            
+                           color-picker-model="var4"
+                           color-picker-output-format="'hsla'"
+                           ng-style="{background: var4}"/>                              
+                </div>
+                <div class="col-md-7">  
+                    <p>Output format:</p>
+                    <pre>
+&lt;input color-picker 
+color-picker-model="var"
+color-picker-output-format="'rgba'"
+ng-style="{background: var}"/&gt;
+                     </pre>
+                </div>
+            </div>
+            
             <hr>
             <div class="row">
                 <div class="col-md-5">
                     <input color-picker 
                    color-picker-show-value="false"
-                   color-picker-model="var3"
-                   ng-style="{background: var3}"/>
+                   color-picker-model="var5"
+                   ng-style="{background: var5}"/>
                 </div>
                 <div class="col-md-7">
                     <p>Hiding output text color. When user introduces a value the output color is showed, use a no editable html element if you want to avoid this behaviour:</p>
@@ -83,9 +114,9 @@ ng-style="{background:var}"/&gt;
             <div class="row">
                 <div class="col-md-5">                    
                     <input color-picker
-                   color-picker-model="var4"
+                   color-picker-model="var6"
                    color-picker-position="bottom"
-                   ng-style="{background: var4}"/>
+                   ng-style="{background: var6}"/>
                 </div>
                 <div class="col-md-7">
                     <p>You can change the color picker position, </p>
@@ -102,9 +133,9 @@ ng-style="{background:var}"/&gt;
             <div class="row">
                 <div class="col-md-5">                    
                     <input color-picker
-                   color-picker-model="var5"
+                   color-picker-model="var7"
                    color-picker-fixed-position="true"
-                   ng-style="{background: var5}"/>
+                   ng-style="{background: var7}"/>
                 </div>
                 <div class="col-md-7">
                     <p>or put it in a fixed position:</p>
@@ -121,11 +152,11 @@ ng-style="{background:var}"/&gt;
             <div class="row">
                 <div class="col-md-5">                    
                     <input color-picker
-                   color-picker-model="var6"
+                   color-picker-model="var8"
                    color-picker-show-input-spinner="true"
                    color-picker-spinner-rgba-steps="5;5;5;0.1"
                    color-picker-spinner-hsla-steps="5;5;5;0.1"
-                   ng-style="{background: var6}"/>
+                   ng-style="{background: var8}"/>
                 </div>
                 <div class="col-md-7">
                     <p>You can show input spinner and change the step:</p>
@@ -144,10 +175,10 @@ ng-style="{background:var}"/&gt;
             <div class="row">   
                 <div class="col-md-5">
                     <input color-picker                            
-                           color-picker-model="var7"
+                           color-picker-model="var9"
                            color-picker-show-cancel-button="true"
                            color-picker-cancel-button-class="btn btn-default btn-xs"
-                           ng-style="{background: var7}"/>                    
+                           ng-style="{background: var9}"/>                    
                 </div>
                 <div class="col-md-7">  
                     <p>Cancel button:</p>
@@ -159,7 +190,7 @@ color-picker-cancel-button-class="btn btn-default btn-xs"
 ng-style="{background:var}"/&gt;
                      </pre>
                 </div>
-            </div>
+            </div>                        
             
             <hr>
             <br>
@@ -176,13 +207,21 @@ ng-style="{background:var}"/&gt;
                             <tr>
                                 <td>color-picker-model</td>
                                 <td>
-                                    Variable with de color value
+                                    Variable with the color value.
                                 </td>
                             </tr>
                             <tr>
                                 <td>color-picker-show-value</td>
                                 <td>
                                     <b>true</b>, false
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>color-picker-output-format</td>
+                                <td>
+                                    'rgba', 'hsla', <b>'hex'</b><br>
+                                    Don't forget single quotes. Notice that you can use a variable to control output format,<br> 
+                                    for example, to let users change output format from interface. 
                                 </td>
                             </tr>
                             <tr>
@@ -200,7 +239,8 @@ ng-style="{background:var}"/&gt;
                             <tr>
                                 <td>color-picker-show-input-spinner</td>
                                 <td>
-                                    true, <b>false</b>
+                                    true, <b>false</b><br>
+                                    With false value you can still change values with the cursor.
                                 </td>
                             </tr>
                             <tr>
@@ -224,7 +264,7 @@ ng-style="{background:var}"/&gt;
                             <tr>
                                 <td>color-picker-cancel-button-class</td>
                                 <td>
-                                    Your custom class for cancel button
+                                    Your custom class for cancel button.
                                 </td>
                             </tr>
                             
@@ -234,6 +274,7 @@ ng-style="{background:var}"/&gt;
             </div>
             <hr>
             <footer class="footer">&copy; Alberto Pujante 2016 | <a href="https://github.com/Alberplz/angular-colorpicker-directive">Angular Color Picker Directive</a></footer>
+            <br>
         </div>        
     </body>
 </html>

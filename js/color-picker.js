@@ -11,9 +11,13 @@ var colorPicker = angular.module('colorpicker', [])
 
             return{
                 hsla2hsva: function (hsla) {
-                    var h = hsla.h, s = hsla.s, l = hsla.l, a = hsla.a;
-                    var v = l + s * (1 - Math.abs(2 * l - 1)) / 2;
-                    return {h: h, s: 2 * (v - l) / v, v: v, a: a};
+                    var h = Math.min(hsla.h, 1), s = Math.min(hsla.s, 1), l = Math.min(hsla.l, 1), a = Math.min(hsla.a, 1);
+                    if (l === 0) {
+                        return {h: h, s: 0, v: 0, a: a};
+                    } else {
+                        var v = l + s * (1 - Math.abs(2 * l - 1)) / 2;
+                        return {h: h, s: 2 * (v - l) / v, v: v, a: a};
+                    }
                 },
                 hsva2hsla: function (hsva) {
                     var h = hsva.h, s = hsva.s, v = hsva.v, a = hsva.a;
@@ -27,7 +31,7 @@ var colorPicker = angular.module('colorpicker', [])
                     }
                 },
                 rgbaToHsva: function (rgba) {
-                    var r = rgba.r, g = rgba.g, b = rgba.b, a = rgba.a;
+                    var r = Math.min(rgba.r, 1), g = Math.min(rgba.g, 1), b = Math.min(rgba.b, 1), a = Math.min(rgba.a, 1);
                     var max = Math.max(r, g, b), min = Math.min(r, g, b);
                     var h, s, v = max;
                     var d = max - min;
@@ -86,24 +90,26 @@ var colorPicker = angular.module('colorpicker', [])
                     //reg expressions https://github.com/jquery/jquery-color/
                     var stringParsers = [
                         {
-                            re: /rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(\d+(?:\.\d+)?)\s*)?\)/,
+                            re: /(rgb)a?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*%?,\s*(\d{1,3})\s*%?(?:,\s*(\d+(?:\.\d+)?)\s*)?\)/,
                             parse: function (execResult) {
                                 return [
-                                    execResult[1],
-                                    execResult[2],
-                                    execResult[3],
-                                    execResult[4]
+                                    'rgb',
+                                    parseInt(execResult[2]),
+                                    parseInt(execResult[3]),
+                                    parseInt(execResult[4]),
+                                    isNaN(parseFloat(execResult[5])) ? 1 : parseFloat(execResult[5])
                                 ];
                             }
                         },
                         {
-                            re: /rgba?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(\d+(?:\.\d+)?)\s*)?\)/,
+                            re: /(hsl)a?\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*(?:,\s*(\d+(?:\.\d+)?)\s*)?\)/,
                             parse: function (execResult) {
                                 return [
-                                    2.55 * execResult[1],
-                                    2.55 * execResult[2],
-                                    2.55 * execResult[3],
-                                    execResult[4]
+                                    'hsl',
+                                    parseInt(execResult[2]),
+                                    parseInt(execResult[3]),
+                                    parseInt(execResult[4]),
+                                    isNaN(parseFloat(execResult[5])) ? 1 : parseFloat(execResult[5])
                                 ];
                             }
                         },
@@ -111,9 +117,11 @@ var colorPicker = angular.module('colorpicker', [])
                             re: /#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$/,
                             parse: function (execResult) {
                                 return [
+                                    'hex',
                                     parseInt(execResult[1], 16),
                                     parseInt(execResult[2], 16),
-                                    parseInt(execResult[3], 16)
+                                    parseInt(execResult[3], 16),
+                                    1
                                 ];
                             }
                         }
@@ -121,9 +129,11 @@ var colorPicker = angular.module('colorpicker', [])
                             re: /#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])$/,
                             parse: function (execResult) {
                                 return [
+                                    'hex',
                                     parseInt(execResult[1] + execResult[1], 16),
                                     parseInt(execResult[2] + execResult[2], 16),
-                                    parseInt(execResult[3] + execResult[3], 16)
+                                    parseInt(execResult[3] + execResult[3], 16),
+                                    1
                                 ];
                             }
                         }
@@ -133,14 +143,12 @@ var colorPicker = angular.module('colorpicker', [])
                     for (var key in stringParsers) {
                         if (stringParsers.hasOwnProperty(key)) {
                             var parser = stringParsers[key];
-                            var match = parser.re.exec(string),
-                                    values = match && parser.parse(match);
+                            var match = parser.re.exec(string), values = match && parser.parse(match);
                             if (values) {
-                                hsva = this.rgbaToHsva({r: values[0] / 255, g: values[1] / 255, b: values[2] / 255, a: 1});
-                                if (!isNaN(parseFloat(values[3]))) {
-                                    hsva.a = parseFloat(values[3]);
+                                if (values[0] === 'hex' || values[0] === 'rgb') {
+                                    hsva = this.rgbaToHsva({r: values[1] / 255, g: values[2] / 255, b: values[3] / 255, a: values[4]});
                                 } else {
-                                    hsva.a = 1;
+                                    hsva = this.hsla2hsva({h: values[1] / 360, s: values[2] / 100, l: values[3] / 100, a: values[4]});
                                 }
                                 return hsva;
                             }
@@ -153,7 +161,7 @@ var colorPicker = angular.module('colorpicker', [])
 colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', function ($document, $compile, ColorHelper) {
         return {
             restrict: 'A',
-            scope: {colorPickerModel: '='},
+            scope: {colorPickerModel: '=', colorPickerOutputFormat: '='},
             controller: ['$scope', function ($scope) {
                     $scope.show = false;
                     $scope.sAndLMax = {};
@@ -169,6 +177,12 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                     $scope.cancelButtonClass = '';
                     $scope.showCancelButton = false;
                     $scope.extraLargeClass = '';
+                    
+                    if ($scope.colorPickerOutputFormat === 'rgba') {
+                        $scope.type = 1;
+                    } else if ($scope.colorPickerOutputFormat === 'hsla') {
+                        $scope.type = 2;
+                    }
 
                     $scope.setSaturation = function (v, rg) {
                         var hsla = ColorHelper.hsva2hsla($scope.hsva);
@@ -227,16 +241,35 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                             $scope.hexText = '#' + $scope.hexText[1] + $scope.hexText[3] + $scope.hexText[5];
                         }
 
-                        if ($scope.hsva.a < 1) {
-                            $scope.outputColor = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + Math.round(rgba.a * 100) / 100 + ')';
-                        } else {
-                            $scope.outputColor = $scope.hexText;
-                        }
                         $scope.alphaSliderColor = 'rgb(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ')';
                         $scope.hueSliderColor = 'rgb(' + hueRgba.r + ',' + hueRgba.g + ',' + hueRgba.b + ')';
 
                         if ($scope.type === 0 && $scope.hsva.a < 1) {
                             $scope.type++;
+                        }
+
+                        //var outputFormat = 'rgba';
+                        if ($scope.hsva.a < 1) {
+                            switch ($scope.colorPickerOutputFormat) {
+                                case 'hsla':
+                                    $scope.outputColor = 'hsla(' + $scope.hslaText.h + ',' + $scope.hslaText.s + '%,' + $scope.hslaText.l + '%,' + $scope.hslaText.a + ')';
+                                    break;
+                                default:
+                                    $scope.outputColor = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + Math.round(rgba.a * 100) / 100 + ')';
+                                    break;
+                            }
+                        } else {
+                            switch ($scope.colorPickerOutputFormat) {
+                                case 'hsla':
+                                    $scope.outputColor = 'hsl(' + $scope.hslaText.h + ',' + $scope.hslaText.s + '%,' + $scope.hslaText.l + '%)';
+                                    break;
+                                case 'rgba':
+                                    $scope.outputColor = $scope.alphaSliderColor;
+                                    break;
+                                default:
+                                    $scope.outputColor = $scope.hexText;
+                                    break;
+                            }
                         }
 
                         $scope.sAndLSlider = {left: $scope.hsva.s * $scope.sAndLMax.x - 8 + 'px', top: (1 - $scope.hsva.v) * $scope.sAndLMax.y - 8 + 'px'};
@@ -267,7 +300,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
 
                 }],
             link: function (scope, element, attr) {
-                var template, close = false, initialValue = '';                
+                var template, close = false, initialValue = '';
 
                 if (scope.colorPickerModel === undefined) {
                     scope.colorPickerModel = '#008fff';
@@ -287,10 +320,10 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                 }
                 if (attr.colorPickerShowCancelButton === 'true') {
                     scope.showCancelButton = true;
-                }
-                if(attr.colorPickerCancelButtonClass !== undefined){
-                    scope.cancelButtonClass = attr.colorPickerCancelButtonClass;
                     scope.extraLargeClass = 'color-picker-extra-large';
+                }
+                if (attr.colorPickerCancelButtonClass !== undefined) {
+                    scope.cancelButtonClass = attr.colorPickerCancelButtonClass;                    
                 }
 
                 if (attr.colorPickerSpinnerRgbaSteps !== undefined && attr.colorPickerSpinnerRgbaSteps.match(/^\d+;\d+;\d+;[0-9]+([\.][0-9]{1,2})?$/) !== null) {
@@ -337,7 +370,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                         '   </div>' +
                         '   <div class="hex-text" ng-show="type==0">' +
                         '       <input text type="text" action="setColorFromHex(string)" ng-model="hexText"/>' +
-                        '       <div>Hex</div>' +
+                        '       <div>HEX</div>' +
                         '   </div>' +
                         '   <div ng-click="typePolicy()" class="type-policy"></div>' +
                         '   <button type="button" class="{{cancelButtonClass}}" ng-show="showCancelButton" ng-click="cancelColor()">Cancel</button>' +
@@ -382,8 +415,8 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
 
                 scope.cancelColor = function () {
                     scope.colorPickerModel = initialValue;
-                    element.val(initialValue);
                     scope.show = false;
+                    updateFromString(scope.colorPickerModel);
                     $document.off('mouseup', mouseup);
                     $document.off('mousedown', mousedown);
                 };
