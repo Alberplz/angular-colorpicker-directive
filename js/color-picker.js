@@ -417,24 +417,39 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                     scope.colorPickerModel = initialValue;
                     scope.show = false;
                     updateFromString(scope.colorPickerModel);
-                    $document.off('mouseup', mouseup);
                     $document.off('mousedown', mousedown);
+                    angular.element(window).off('resize', resize);
                 };
 
                 element.on('click', open);
-                function open(event) {
-                    var box;
+                function open(event) {                    
                     initialValue = scope.colorPickerModel;
                     scope.$apply(function () {
                         scope.show = true;
+                    });                    
+                    scope.$apply(function () {
+                        scope.sAndLMax = {x: template[0].getElementsByClassName("saturation-lightness")[0].offsetWidth, y: template[0].getElementsByClassName("saturation-lightness")[0].offsetHeight};
+                        scope.hueMax = {x: template[0].getElementsByClassName("hue")[0].offsetWidth};
+                        scope.alphaMax = {x: template[0].getElementsByClassName("alpha")[0].offsetWidth};
+                        scope.update();
                     });
+                    setDialogPosition();
+                    $document.on('mousedown', mousedown);
+                    angular.element(window).on('resize', resize);
+                }
+                
+                function resize(){    
+                    setDialogPosition();
+                }
+                
+                function setDialogPosition() {
+                    var box;
                     if (attr.colorPickerFixedPosition === 'true') {
                         box = createBox(element[0], false);
                         template[0].style.position = "fixed";
                     } else {
                         box = createBox(element[0], true);
                     }
-
                     if (attr.colorPickerPosition === "left") {
                         template[0].style.top = box.top + 'px';
                         template[0].style.left = (box.left - 252) + 'px';
@@ -449,17 +464,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                         template[0].style.top = box.top + 'px';
                         template[0].style.left = (box.left + box.width) + 'px';
                     }
-
-                    scope.$apply(function () {
-                        scope.sAndLMax = {x: template[0].getElementsByClassName("saturation-lightness")[0].offsetWidth, y: template[0].getElementsByClassName("saturation-lightness")[0].offsetHeight};
-                        scope.hueMax = {x: template[0].getElementsByClassName("hue")[0].offsetWidth};
-                        scope.alphaMax = {x: template[0].getElementsByClassName("alpha")[0].offsetWidth};
-                        scope.update();
-                    });
-
-                    $document.on('mousedown', mousedown);
-                    $document.on('mouseup', mouseup);
-                }
+                }                                
 
                 element.on('$destroy', function () {
                     element.off('click', open);
@@ -468,23 +473,12 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                 });
 
                 function mousedown(event) {
-                    if (event.target.tagName !== "INPUT" && event.target.tagName !== 'HTML') {
-                        event.preventDefault();
-                    }
-                    if (template[0] === event.target || isDescendant(template[0], event.target) || event.target.tagName === 'HTML') {
-                        close = false;
-                    } else {
-                        close = true;
-                    }
-                }
-
-                function mouseup(event) {
-                    if (close && event.target !== element[0] && template[0] !== event.target && !isDescendant(template[0], event.target)) {
+                    if (event.target !== element[0] && template[0] !== event.target && !isDescendant(template[0], event.target)) {
                         scope.$apply(function () {
                             scope.show = false;
                         });
-                        $document.off('mouseup', mouseup);
                         $document.off('mousedown', mousedown);
+                        angular.element(window).off('resize', resize);
                     }
                 }
 
@@ -515,7 +509,7 @@ colorPicker.directive('text', [function () {
             scope: {
                 action: '&'
             },
-            link: function (scope, element, attr, ngModel) {
+            link: function (scope, element, attr) {
                 element.on('paste', delayedUpdate);
                 element.on('keyup', update);
                 element.on('change', update);
@@ -577,15 +571,16 @@ colorPicker.directive('slider', ['$document', '$window', function ($document, $w
                 action: '&'
             },
             link: function (scope, element, attr) {
-                element.on('mousedown', mousedown);
+                element.on('mousedown touchstart', mousedown);
                 function mousedown(event) {
                     setCursor(event);
-                    $document.on('mousemove', mousemove);
+                    $document.on('mousemove touchmove', mousemove);
                 }
-                $document.on('mouseup', function () {
-                    $document.off('mousemove', mousemove);
+                $document.on('mouseup touchend', function () {
+                    $document.off('mousemove touchmove', mousemove);
                 });
                 function mousemove(event) {
+                    event.preventDefault();
                     setCursor(event);
                 }
 
@@ -605,13 +600,13 @@ colorPicker.directive('slider', ['$document', '$window', function ($document, $w
                 }
 
                 function getX(event, element) {
-                    return event.pageX - element.getBoundingClientRect().left - $window.pageXOffset;
+                    return (event.pageX !== undefined ? event.pageX : event.touches[0].pageX) - element.getBoundingClientRect().left - $window.pageXOffset;
                 }
                 function getY(event, element) {
-                    return event.pageY - element.getBoundingClientRect().top - $window.pageYOffset;
+                    return (event.pageY !== undefined ? event.pageY : event.touches[0].pageY) - element.getBoundingClientRect().top - $window.pageYOffset;
                 }
                 element.on('$destroy', function () {
-                    element.off('mousedown', mousedown);
+                    element.off('mousedown touchend', mousedown);
                 });
             }};
     }]);
