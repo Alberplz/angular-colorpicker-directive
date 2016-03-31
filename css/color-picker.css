@@ -13,37 +13,6 @@
   margin: 0px;
   font-size: 11px; }
 
-.arrow {
-  height: 0px;
-  width: 0px;
-  border-style: solid;
-  position: absolute;
-  z-index: 999999; }
-
-.arrow-right {
-  border-width: 5px 10px;
-  border-color: transparent #777 transparent transparent;
-  top: 10px;
-  left: -20px; }
-
-.arrow-left {
-  border-width: 5px 10px;
-  border-color: transparent transparent transparent #777;
-  top: 10px;
-  left: 231px; }
-
-.arrow-bottom {
-  border-width: 10px 5px;
-  border-color: transparent transparent #777 transparent;
-  top: -21px;
-  left: 0px; }
-
-.arrow-top {
-  border-width: 10px 5px;
-  border-color: #777 transparent transparent transparent;
-  top: 299px;
-  left: 20px; }
-
 .color-picker {
   margin-left: 10px;
   width: 232px;
@@ -60,23 +29,49 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
-  .color-picker i {
-    cursor: default;
-    position: relative; }
-  .color-picker input {
-    text-align: center;
-    font-size: 13px;
-    height: 26px; }
-    .color-picker input:invalid {
-      box-shadow: none; }
-    .color-picker input:-moz-submit-invalid {
-      box-shadow: none; }
-    .color-picker input:-moz-ui-invalid {
-      box-shadow: none; }
-  .color-picker button {
-    position: absolute;
-    top: 275px;
-    left: 161px; }
+.color-picker i {
+  cursor: default;
+  position: relative; }
+.color-picker input {
+  text-align: center;
+  font-size: 13px;
+  height: 26px; }
+.color-picker input:invalid {
+  box-shadow: none; }
+.color-picker input:-moz-submit-invalid {
+  box-shadow: none; }
+.color-picker input:-moz-ui-invalid {
+  box-shadow: none; }
+.color-picker button {
+  position: absolute;
+  top: 275px;
+  left: 161px; }
+.color-picker .arrow {
+  height: 0;
+  width: 0;
+  border-style: solid;
+  position: absolute;
+  z-index: 999999; }
+.color-picker .arrow-right {
+  border-width: 5px 10px;
+  border-color: transparent #777 transparent transparent;
+  top: 10px;
+  left: -20px; }
+.color-picker .arrow-left {
+  border-width: 5px 10px;
+  border-color: transparent transparent transparent #777;
+  top: 10px;
+  left: 231px; }
+.color-picker .arrow-bottom {
+  border-width: 10px 5px;
+  border-color: transparent transparent #777 transparent;
+  top: -21px;
+  left: 0; }
+.color-picker .arrow-top {
+  border-width: 10px 5px;
+  border-color: #777 transparent transparent transparent;
+  top: 299px;
+  left: 20px; }
 
 .color-picker-extra-large {
   height: 320px !important; }
