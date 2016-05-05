@@ -1,8 +1,8 @@
 /*
  * Color Picker Angular directive
- * 
+ *
  * Alberto Pujante
- * 
+ *
  * @licence: http://opensource.org/licenses/MIT
  */
 'use strict';
@@ -158,7 +158,7 @@ var colorPicker = angular.module('colorpicker', [])
                 }
             };
         });
-colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', function ($document, $compile, ColorHelper) {
+colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', '$timeout', function ($document, $compile, ColorHelper, $timeout) {
         return {
             restrict: 'A',
             scope: {colorPickerModel: '=', colorPickerOutputFormat: '='},
@@ -177,7 +177,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                     $scope.cancelButtonClass = '';
                     $scope.showCancelButton = false;
                     $scope.extraLargeClass = '';
-                    
+
                     if ($scope.colorPickerOutputFormat === 'rgba') {
                         $scope.type = 1;
                     } else if ($scope.colorPickerOutputFormat === 'hsla') {
@@ -323,7 +323,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                     scope.extraLargeClass = 'color-picker-extra-large';
                 }
                 if (attr.colorPickerCancelButtonClass !== undefined) {
-                    scope.cancelButtonClass = attr.colorPickerCancelButtonClass;                    
+                    scope.cancelButtonClass = attr.colorPickerCancelButtonClass;
                 }
 
                 if (attr.colorPickerSpinnerRgbaSteps !== undefined && attr.colorPickerSpinnerRgbaSteps.match(/^\d+;\d+;\d+;[0-9]+([\.][0-9]{1,2})?$/) !== null) {
@@ -422,26 +422,28 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                 };
 
                 element.on('click', open);
-                function open(event) {                    
+                function open(event) {
                     initialValue = scope.colorPickerModel;
                     scope.$apply(function () {
                         scope.show = true;
-                    });                    
-                    scope.$apply(function () {
-                        scope.sAndLMax = {x: template[0].getElementsByClassName("saturation-lightness")[0].offsetWidth, y: template[0].getElementsByClassName("saturation-lightness")[0].offsetHeight};
-                        scope.hueMax = {x: template[0].getElementsByClassName("hue")[0].offsetWidth};
-                        scope.alphaMax = {x: template[0].getElementsByClassName("alpha")[0].offsetWidth};
-                        scope.update();
+
+                        $timeout(function () {
+                            scope.sAndLMax = {x: template[0].getElementsByClassName("saturation-lightness")[0].offsetWidth, y: template[0].getElementsByClassName("saturation-lightness")[0].offsetHeight};
+                            scope.hueMax = {x: template[0].getElementsByClassName("hue")[0].offsetWidth};
+                            scope.alphaMax = {x: template[0].getElementsByClassName("alpha")[0].offsetWidth};
+                            scope.update();
+                        });
                     });
+
                     setDialogPosition();
                     $document.on('mousedown', mousedown);
                     angular.element(window).on('resize', resize);
                 }
-                
-                function resize(){    
+
+                function resize(){
                     setDialogPosition();
                 }
-                
+
                 function setDialogPosition() {
                     var box;
                     if (attr.colorPickerFixedPosition === 'true') {
@@ -464,7 +466,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                         template[0].style.top = box.top + 'px';
                         template[0].style.left = (box.left + box.width) + 'px';
                     }
-                }                                
+                }
 
                 element.on('$destroy', function () {
                     element.off('click', open);
