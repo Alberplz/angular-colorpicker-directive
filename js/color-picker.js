@@ -341,7 +341,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                     element.val(scope.outputColor);
                 }
 
-                template = angular.element('<div ng-show="show" class="color-picker {{extraLargeClass}}">' +
+                template = angular.element('<div ng-show="show" class="color-picker ng-hide {{extraLargeClass}}">' +
                         '   <div class="arrow arrow-' + attr.colorPickerPosition + '"></div>' +
                         '   <div slider rg-x=1 rg-y=1 action="setSaturationAndBrightness(s, v, rgX, rgY)" class="saturation-lightness" ng-style="{\'background-color\':hueSliderColor}">' +
                         '       <div class="cursor-sv" ng-style="{\'top\':sAndLSlider.top, \'left\':sAndLSlider.left}"></div>' +
