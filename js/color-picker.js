@@ -417,7 +417,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                     scope.colorPickerModel = initialValue;
                     scope.show = false;
                     updateFromString(scope.colorPickerModel);
-                    $document.off('mousedown', mousedown);
+                    $document.off('mousedown touchstart', mousedown);
                     angular.element(window).off('resize', resize);
                 };
 
@@ -434,7 +434,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                         scope.update();
                     });
                     setDialogPosition();
-                    $document.on('mousedown', mousedown);
+                    $document.on('mousedown touchstart', mousedown);
                     angular.element(window).on('resize', resize);
                 }
                 
@@ -477,7 +477,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                         scope.$apply(function () {
                             scope.show = false;
                         });
-                        $document.off('mousedown', mousedown);
+                        $document.off('mousedown touchstart', mousedown);
                         angular.element(window).off('resize', resize);
                     }
                 }
