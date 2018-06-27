@@ -1,0 +1,19 @@
+{
+  "name": "angular-colorpicker-directive",
+  "version": "1.2.3",
+  "description": "AnguarJS colorpicker directive with no dependencies required.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yconoclast/angular-colorpicker-directive.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yconoclast/angular-colorpicker-directive/issues"
+  },
+  "homepage": "https://github.com/yconoclast/angular-colorpicker-directive#readme"
+}
