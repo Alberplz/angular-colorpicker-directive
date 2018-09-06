@@ -470,6 +470,7 @@ colorPicker.directive('colorPicker', ['$document', '$compile', 'ColorHelper', fu
                     element.off('click', open);
                     element.off('keyup', keyup);
                     element.off('paste', delayedUpdate);
+                    template.remove();
                 });
 
                 function mousedown(event) {
