@@ -138,7 +138,7 @@ var colorPicker = angular.module('colorpicker', [])
                             }
                         }
                     ];
-                    string = string.toLowerCase();
+                    if(string) string = string.toLowerCase();
                     var hsva = null;
                     for (var key in stringParsers) {
                         if (stringParsers.hasOwnProperty(key)) {
