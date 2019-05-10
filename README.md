@@ -1,8 +1,8 @@
-# angular-colorpicker-directive
+# angularjs-colorpicker
 AnguarJS colorpicker directive with no dependencies required.
 
 # Demo page
-http://alberplz.github.io/angular-colorpicker-directive/index.html
+https://vbauermann.github.io/angularjs-colorpicker/index.html
 
 # Usage
 * Include color-picker.min.js and color-picker.min.css:
@@ -51,5 +51,5 @@ If you want to change precaculated images for color picker sliders you can find 
 The images are not compressed.
 
 * Demo:
-http://alberplz.github.io/angular-colorpicker-directive/slider-creator/slider-images.html
+https://vbauermann.github.io/angularjs-colorpicker/slider-creator/slider-images.html
 
