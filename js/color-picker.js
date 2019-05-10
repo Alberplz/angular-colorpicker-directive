@@ -1,7 +1,7 @@
 /*
- * Color Picker Angular directive
+ * AngularJs Colorpicker
  * 
- * Alberto Pujante
+ * Vitor Bauermann Silveira
  * 
  * @licence: http://opensource.org/licenses/MIT
  */
